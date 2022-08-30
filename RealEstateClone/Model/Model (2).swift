@@ -166,7 +166,7 @@ enum City: String, CaseIterable, Codable {
     
     var extraZoomLevel: MKCoordinateSpan {
         switch self {
-        case .arrass:     return .init(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        case .arrass:     return .init(latitudeDelta: 2, longitudeDelta: 2)
         case .qassim:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         case .riyadh:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         case .almadinah:  return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -183,12 +183,12 @@ enum City: String, CaseIterable, Codable {
     
     var zoomLevel: MKCoordinateSpan {
         switch self {
-        case .arrass:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        case .arrass:     return .init(latitudeDelta: 1, longitudeDelta: 1)
         case .qassim:     return .init(latitudeDelta: 1.0, longitudeDelta: 1.0)
-        case .riyadh:     return .init(latitudeDelta: 0.3, longitudeDelta: 0.3)
-        case .almadinah:  return .init(latitudeDelta: 0.2, longitudeDelta: 0.2)
-        case .meccah:     return .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        case .tabuk:      return .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        case .riyadh:     return .init(latitudeDelta: 1, longitudeDelta: 1)
+        case .almadinah:  return .init(latitudeDelta: 1, longitudeDelta: 0.2)
+        case .meccah:     return .init(latitudeDelta: 1, longitudeDelta: 1)
+        case .tabuk:      return .init(latitudeDelta: 1, longitudeDelta: 1)
 //        case .najran:     return .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
 //        case .jazan:      return .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
 //        case .hail:       return .init(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -206,6 +206,7 @@ struct RealEstate: Codable, Equatable , Identifiable {
     
     var id = UUID().uuidString
     var images: [String] = []
+    var ownerId : String = ""  
     var description: String = ""
     var beds: Int = 0
     var baths: Int = 0

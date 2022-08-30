@@ -46,7 +46,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.beds)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.orange).cornerRadius(12)
                 }
@@ -83,7 +83,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.baths)")
                             .fontWeight(.heavy)
                 }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.purple).cornerRadius(12)
                 }
@@ -119,7 +119,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.livingRooms)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.gray).cornerRadius(12)
                 }
@@ -148,7 +148,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.space)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.blue).cornerRadius(12)
                 }
@@ -193,7 +193,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.ovens)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.green).cornerRadius(12)
                 }
@@ -230,7 +230,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.fridges)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.brown).cornerRadius(12)
                 }
@@ -268,7 +268,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.microwaves)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.yellow).cornerRadius(12)
                 }
@@ -304,7 +304,7 @@ struct AddNewApplianceView: View {
                         Text("\(newRealEstate.airConditions)")
                             .fontWeight(.heavy)
                     }
-                    .frame(width: 90, height: 80)
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.white)
                     .background(Color.pink).cornerRadius(12)
                 }

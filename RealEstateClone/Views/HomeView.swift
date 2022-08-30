@@ -11,6 +11,8 @@ import MapKit
 import LoremSwiftum
 struct HomeView: View {
     @EnvironmentObject var firebaseUserManger : FirebaseUserManger
+    @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
+
     @State var isProfileViewPresented : Bool = false
     @State var isAuthViewPresented : Bool = false
     @State var isAddNewEstateViewPresented : Bool = false
@@ -194,7 +196,7 @@ struct HomeView: View {
                 HStack {
                     Image(systemName: "plus")
                     Text("Add New Estat")
-                } .isHidden(!firebaseUserManger.isUserLogin(), remove: !firebaseUserManger.isUserLogin())
+                } .isHidden(firebaseUserManger.isUserLogin(), remove: firebaseUserManger.isUserLogin())
 
             }.padding(45).padding(.top , 30)
         }
@@ -208,9 +210,11 @@ struct HomeView: View {
             .fullScreenCover(isPresented: $isProfileViewPresented) {
             ProfileView()
         }
+        
             .fullScreenCover(isPresented: $isAddNewEstateViewPresented) {
-            AddRealEstate()
+            AddRealEstateView()
         }
+        
             .fullScreenCover(isPresented: $isAuthViewPresented) {
             AuthView()
         }
@@ -283,6 +287,7 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
             .environmentObject(FirebaseUserManger())
+            .environmentObject(FirebaseRealEstateManger())
 
     }
 }

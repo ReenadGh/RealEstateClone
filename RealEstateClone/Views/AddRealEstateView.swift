@@ -9,15 +9,17 @@ import SwiftUI
 import PhotosUI
 import AVKit
 import LoremSwiftum
+import MapKit
 class addRealEstateModel : ObservableObject {
     @Published var newRealEstate = RealEstate()
     @Published var images : [UIImage] = []
     @Published var isShowingVideoPicker : Bool = false
     @Published var videoURL : URL?
     @Published var refreshMapViewId  = UUID()
+    @Published var coordinateRegion  : MKCoordinateRegion =       MKCoordinateRegion(center: City.arrass.coordinate, latitudinalMeters: City.arrass.zoomLevel.latitudeDelta, longitudinalMeters: City.arrass.zoomLevel.longitudeDelta)
 
 }
-struct AddRealEstate: View {
+struct AddRealEstateView: View {
     @State var newRealEstate : RealEstate = RealEstate()
     @Environment(\.presentationMode) private var presentationMode
     @StateObject var  viewModel = addRealEstateModel()
@@ -36,25 +38,27 @@ struct AddRealEstate: View {
         NavigationView {
             ScrollView {
                  Group{
-                HStack{
+                     VStack(spacing : 0){
+                     HStack{
                     Text("Location")
                         .font(.system(size: 25 , weight: .bold))
                         .foregroundColor(.gray)
                     Spacer()
                 }.padding(.top , 8)
-
                     Menu{
                         ForEach(City.allCases , id: \.self){ city in
                             Button {
                                 viewModel.newRealEstate.city = city
+                                viewModel.coordinateRegion = MKCoordinateRegion(center: city.coordinate, latitudinalMeters: city.zoomLevel.latitudeDelta, longitudinalMeters: city.zoomLevel.longitudeDelta)
                             } label: {
                                 Text(city.title)
                             }
                         }
                     }label: {
+        
                         HStack{
                            Text("City")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                             .font(.system(size: 19 , weight: .heavy))
                             Spacer()
                         Text(viewModel.newRealEstate.city.title)
@@ -62,9 +66,11 @@ struct AddRealEstate: View {
                         }.padding(10).background(Color(.systemGray6)).cornerRadius(10).padding(.vertical , 2)
 
                     }
-
-
-                   HStack{
+                 
+                     }.padding(.horizontal , 15)
+                     VStack(spacing : 0){
+                  
+                         HStack{
                     Text("Type")
                         .font(.system(size: 25 , weight: .bold))
                         .foregroundColor(.gray)
@@ -85,7 +91,7 @@ struct AddRealEstate: View {
                     }label: {
                         HStack{
                            Text("Category")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                             .font(.system(size: 19 , weight: .heavy))
                             Spacer()
                             HStack {
@@ -97,8 +103,9 @@ struct AddRealEstate: View {
 
                     }
 
-
-                    HStack{
+                     }.padding(.horizontal , 15)
+                     VStack(spacing : 0){
+                     HStack{
                     Text("Sale")
                         .font(.system(size: 25 , weight: .bold))
                         .foregroundColor(.gray)
@@ -116,7 +123,7 @@ struct AddRealEstate: View {
                     }label: {
                         HStack{
                            Text("Offer")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                             .font(.system(size: 19 , weight: .heavy))
                             Spacer()
                         Text(viewModel.newRealEstate.saleCategory.title)
@@ -125,6 +132,8 @@ struct AddRealEstate: View {
 
                     }
 
+                     }.padding(.horizontal , 15)
+                     VStack(spacing : 0){
                    HStack{
                     Text("Duration")
                         .font(.system(size: 25 , weight: .bold))
@@ -143,7 +152,7 @@ struct AddRealEstate: View {
                     }label: {
                         HStack{
                            Text("Time")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                             .font(.system(size: 19 , weight: .heavy))
                             Spacer()
                         Text(viewModel.newRealEstate.offer.title)
@@ -151,6 +160,8 @@ struct AddRealEstate: View {
                         }.padding(10).background(Color(.systemGray6)).cornerRadius(10).padding(.vertical , 2)
 
                     }
+                     }.padding(.horizontal , 15)
+                     
                 }
                 Group {
                     VStack{
@@ -170,9 +181,10 @@ struct AddRealEstate: View {
                      .cornerRadius(10)
                     .padding(.vertical , 2)
 
-                    }
+                    }.padding(.horizontal , 15)
                 }
                 Group{
+                    VStack(spacing : 0) {
                 HStack{
                Text("Photos")
               .font(.system(size: 25 , weight: .bold))
@@ -252,10 +264,13 @@ struct AddRealEstate: View {
                     }
 
                 }
+                    }.padding(.horizontal , 15)
 
                 }
                 Group{
+                    VStack(spacing : 0){
                 HStack{
+                    
                Text("Video")
               .font(.system(size: 25 , weight: .bold))
               .foregroundColor(.gray)
@@ -328,9 +343,10 @@ struct AddRealEstate: View {
 
 
                 }
-
+                    }.padding(.horizontal , 15)
                 }
                 Group{
+                 
                 HStack{
                Text("Appliance")
               .font(.system(size: 25 , weight: .bold))
@@ -338,14 +354,12 @@ struct AddRealEstate: View {
                Spacer()
 
 
-                }.padding(.vertical , 8)
-
-
-
+                }.padding(.vertical , 8).padding(.horizontal , 15)
                 AddNewApplianceView(newRealEstate: $viewModel.newRealEstate)
-
+                    
                 }
                 Group{
+                    VStack(spacing : 0){
                 HStack{
                Text("Info")
               .font(.system(size: 25 , weight: .bold))
@@ -361,7 +375,7 @@ struct AddRealEstate: View {
                     .frame( minHeight : 100)
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-
+                    }.padding(.horizontal , 15)
                 }
                 Group{
                 HStack{
@@ -371,16 +385,14 @@ struct AddRealEstate: View {
                Spacer()
 
 
-                }.padding(.vertical , 8)
+                }.padding(.vertical , 8).padding(.horizontal , 15)
 
 
                 AddAmenitiesView(newRealEstate: $viewModel.newRealEstate)
                     
 
                 }
-
-                
-       Group{
+                Group{
       HStack{
             Text("Location")
           .font(.system(size: 25 , weight: .bold))
@@ -388,7 +400,7 @@ struct AddRealEstate: View {
                                         Spacer()
                 
                 
-                                    }.padding(.vertical , 8)
+                                    }.padding(.vertical , 8).padding(.horizontal , 15)
            
            MapUIKitView(realEstate: $viewModel.newRealEstate)
                .frame(width: UIScreen.main.bounds.width-40, height: 250 )
@@ -408,9 +420,6 @@ struct AddRealEstate: View {
            Text("LAT : \(viewModel.newRealEstate.location.latitude)     LON : \(viewModel.newRealEstate.location.longitude)")
            Text("")
        }
-                
-                
-                
                 Group{
                     VStack{
                         HStack{
@@ -420,7 +429,7 @@ struct AddRealEstate: View {
                        Spacer()
 
 
-                        }.padding(.vertical , 8)
+                        }.padding(.vertical , 8).padding(.horizontal , 15)
         HStack{
             VStack {
                 Image("people-1")
@@ -483,8 +492,8 @@ struct AddRealEstate: View {
 
 
 
-                Button {
-
+                Button{
+               
 
                 } label: {
                     ZStack {
@@ -501,7 +510,7 @@ struct AddRealEstate: View {
                                 .foregroundColor(.white)
                         }
                     }
-                }.buttonStyle(.borderless)
+                }
             }
         }
         
@@ -523,13 +532,11 @@ struct AddRealEstate: View {
         
                     }
                 }
-                
-                
                 Group {
                     Divider()
                         .padding()
-                    Button {
-                        
+                    NavigationLink {
+                        SampleNewRealEstate( realEstate: $viewModel.newRealEstate, images: $viewModel.images, VideoURL: $viewModel.videoURL, region: $viewModel.coordinateRegion )
                     } label: {
                         Text("show sample before upload")
                             .foregroundColor(.blue)
@@ -544,9 +551,9 @@ struct AddRealEstate: View {
                 }
                 }
 
-
-            }.padding(.horizontal , 15)
-            .navigationTitle("Add Real Estate")
+         
+            }.padding(.horizontal , 0)
+            .navigationTitle("New Real Estate")
             .toolbar {
                 ToolbarItem (placement: .navigationBarLeading) {
                     Button {
@@ -563,6 +570,7 @@ struct AddRealEstate: View {
 
 struct AddRealEstate_Previews: PreviewProvider {
     static var previews: some View {
-        AddRealEstate()
+        AddRealEstateView()
+            .environmentObject(FirebaseRealEstateManger())
     }
 }

@@ -24,8 +24,8 @@ struct AddAmenitiesView: View {
                     Text("Smarts")
                     Image(systemName:  newRealEstate.isSmart ? "checkmark.square.fill":"square")
                         .imageScale(.large)
-                        .foregroundColor(newRealEstate.isSmart ? .green: .black)
-                }.foregroundColor(.black)
+                        .foregroundColor(newRealEstate.isSmart ? .green: .white)
+                }.foregroundColor(.white)
             }
 
             
@@ -40,8 +40,8 @@ struct AddAmenitiesView: View {
                     Text("Wifi")
                     Image(systemName:  newRealEstate.hasWiFi ? "checkmark.square.fill":"square")
                         .imageScale(.large)
-                        .foregroundColor(newRealEstate.hasWiFi ? .green: .black)
-                }.foregroundColor(.black)
+                        .foregroundColor(newRealEstate.hasWiFi ? .green: .white)
+                }.foregroundColor(.white)
             }
 
             
@@ -56,8 +56,8 @@ struct AddAmenitiesView: View {
                     Text("Pool")
                     Image(systemName:  newRealEstate.hasPool ? "checkmark.square.fill":"square")
                         .imageScale(.large)
-                        .foregroundColor(newRealEstate.hasPool ? .green: .black)
-                }.foregroundColor(.black)
+                        .foregroundColor(newRealEstate.hasPool ? .green: .white)
+                }.foregroundColor(.white)
             }
 
             
@@ -72,8 +72,8 @@ struct AddAmenitiesView: View {
                     Text("Elevator")
                     Image(systemName:  newRealEstate.hasElevator ? "checkmark.square.fill":"square")
                         .imageScale(.large)
-                        .foregroundColor(newRealEstate.hasElevator ? .green: .black)
-                }.foregroundColor(.black)
+                        .foregroundColor(newRealEstate.hasElevator ? .green: .white)
+                }.foregroundColor(.white)
             }
 
             
@@ -89,8 +89,8 @@ struct AddAmenitiesView: View {
                     Text("Gym")
                     Image(systemName:  newRealEstate.hasGym ? "checkmark.square.fill":"square")
                         .imageScale(.large)
-                        .foregroundColor(newRealEstate.hasGym ? .green: .black)
-                }.foregroundColor(.black)
+                        .foregroundColor(newRealEstate.hasGym ? .green: .white)
+                }.foregroundColor(.white)
             }
 
 
@@ -134,7 +134,7 @@ struct AddAmenitiesView: View {
                         Text("\(newRealEstate.age) Years")
                     }
                    
-                }.foregroundColor(.black)
+                }.foregroundColor(.white)
             }
 
             

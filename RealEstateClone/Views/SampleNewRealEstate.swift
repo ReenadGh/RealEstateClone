@@ -15,23 +15,19 @@ import SDWebImageSwiftUI
 struct SampleNewRealEstate: View {
     
         @EnvironmentObject var firebaseUserManger : FirebaseUserManger
+        @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
+
         @Binding var realEstate : RealEstate
+        @Binding var images : [UIImage]
+        @Binding var VideoURL : URL?
         @State var selectedMediaType : MediaType = .photo
         @Binding var region : MKCoordinateRegion
         @State private var scaleMapAnnotation : Double = 0.0
-        @State var  daysTimeSelection : [DayTimeSelection] = [
-            .init(day: .friday, fromTime: Date(), toTime: Date()),
-            .init(day: .saturday, fromTime: Date(), toTime: Date()),
-            .init(day: .sunday, fromTime: Date(), toTime: Date()),
-            .init(day: .monday, fromTime: Date(), toTime: Date()),
-            .init(day: .tuesday, fromTime: Date(), toTime: Date()),
-            .init(day: .wednesday, fromTime: Date(), toTime: Date()),
-            .init(day: .thursday, fromTime: Date(), toTime: Date())
-        ]
+
         var body: some View {
             ScrollView{
                 
-                
+                Group {
                 Picker (selection : $selectedMediaType) {
                     ForEach  (MediaType.allCases , id: \.self) { mediaType in
                         Text(mediaType.title)
@@ -39,12 +35,15 @@ struct SampleNewRealEstate: View {
                 } label: {
                 }.labelsHidden().pickerStyle(.segmented).padding()
 
-                
+                }
+                Group {
                 switch selectedMediaType {
                 case .photo:
+                    
+                    if !images.isEmpty {
                     TabView {
-                    ForEach(realEstate.images , id: \.self){ image in
-                        Image(image)
+                    ForEach(images , id: \.self){ uiImage in
+                        Image(uiImage: uiImage)
                             .resizable()
                             .scaledToFill()
                             .frame(width: UIScreen.main.bounds.width - 20, height:350 )
@@ -54,14 +53,20 @@ struct SampleNewRealEstate: View {
                     }.tabViewStyle(.page(indexDisplayMode: .always))
                         .indexViewStyle(.page(backgroundDisplayMode: .always))
                         .frame(height : 390)
+                        
+                    }
                 case .video:
 
-                    VideoPlayer(player: AVPlayer(url: URL(string: realEstate.videoStringURL)!))
+                    if let videoURL = VideoURL {
+                        VideoPlayer(player: AVPlayer(url: videoURL))
                         .frame(width: UIScreen.main.bounds.width - 20, height:390)
                         .cornerRadius(20)
+                    }
                 }
                
-
+                }
+                
+                Group{
                 VStack (alignment: .leading) {
                     HStack {
                         Text("Info")
@@ -121,6 +126,8 @@ struct SampleNewRealEstate: View {
                     AmenitiesView(realEstate: $realEstate)
 
 
+                }
+                    
                 }
                 
                 Divider()
@@ -276,7 +283,7 @@ struct SampleNewRealEstate: View {
                     }
                 }
                 
-                ForEach (daysTimeSelection , id : \.self) { dayTime in
+                                ForEach (firebaseUserManger.user.dayTimeAvailability , id : \.self) { dayTime in
                     
                     
                     HStack( spacing: 20){
@@ -294,6 +301,33 @@ struct SampleNewRealEstate: View {
                 
                             }
                 
+                Button {
+                    print ("Buttton Pressed")
+
+                    realEstate.ownerId = firebaseUserManger.user.id
+                    firebaseRealEstateManger.addRealEstate(realEstate: realEstate, images: images, videoURL: VideoURL) { isSecces in
+                        
+                        if isSecces {
+                            
+                        }
+                        
+                    }
+       
+
+
+                } label: {
+                    Text("upload my RealEstate ")
+                        .foregroundColor(.blue)
+                        .fontWeight(.bold)
+                        .frame(width: 300, height: 50)
+                        .overlay(RoundedRectangle(cornerRadius: 12)
+                            
+                            .stroke(Color.blue , lineWidth: 2)
+                            
+                            )
+                        .cornerRadius(12)
+            }
+                
         }
             .navigationTitle("Title")
             
@@ -303,8 +337,11 @@ struct SampleNewRealEstate: View {
 struct SampleNewRealEstate_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SampleNewRealEstate( realEstate: .constant(realEstateExamble) , region: .constant(.init(center: City.arrass.coordinate , span: City.arrass.extraZoomLevel)) )
+            SampleNewRealEstate( realEstate: .constant(realEstateExamble)  , images: .constant([UIImage(named: "Image1")!,UIImage(named :"Image2")!]),VideoURL: .constant(URL(string:"")),
+                                 region: .constant(.init(center: City.arrass.coordinate , span: City.arrass.extraZoomLevel)) )
+                .environmentObject(FirebaseRealEstateManger())
                 .environmentObject(FirebaseUserManger())
+
         }
     }
 }
