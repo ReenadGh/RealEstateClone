@@ -12,19 +12,50 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 class FirebaseRealEstateManger : NSObject, ObservableObject  {
-    
+    @Published  var realEstates : [RealEstate] = []
+
     let auth : Auth
     let firestore : Firestore
     let storage : Storage
-    
+
     
     override init() {
         self.auth = Auth.auth()
         self.firestore = Firestore.firestore()
         self.storage = Storage.storage()
         super.init()
+        
+        self.fetchRealEstate()
+
+
     }
     
+    func fetchRealEstate() {
+        firestore.collection("realEstate").addSnapshotListener { querySnapshot, error in
+            if let error = error {
+                print("DEBUG : \(error) ")
+                return
+            }
+            
+             guard let realEstates = querySnapshot?.documents.compactMap({ try? $0.data(as:RealEstate.self )})else {return }
+            self.realEstates = realEstates
+        
+        }
+    }
+    
+    func fetchUserById(userId : String , completion : @escaping ((User)->()) ){
+
+        firestore.collection("users").document(userId).getDocument { documentSnapshot, error in
+            if let error = error {
+                print("DEBUG : \(error) ")
+                return
+            }
+            
+            guard let user = try? documentSnapshot?.data(as : User.self) else {return }
+            completion(user)
+        }
+    }
+
     
     func addRealEstate( realEstate : RealEstate , images : [UIImage] , videoURL :URL?,  completion : @escaping ((Bool)->())){
         
@@ -41,7 +72,10 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
                 }catch{
                     print("error to upload realeEstate")
                     print(error.localizedDescription)
+                    completion(false)
                 }
+                
+                completion(true)
             }
             
         

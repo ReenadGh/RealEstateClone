@@ -20,9 +20,11 @@ struct SampleNewRealEstate: View {
         @Binding var realEstate : RealEstate
         @Binding var images : [UIImage]
         @Binding var VideoURL : URL?
+    
+    
         @State var selectedMediaType : MediaType = .photo
-        @Binding var region : MKCoordinateRegion
         @State private var scaleMapAnnotation : Double = 0.0
+    @State var region : MKCoordinateRegion = .init()
 
         var body: some View {
             ScrollView{
@@ -54,6 +56,12 @@ struct SampleNewRealEstate: View {
                         .indexViewStyle(.page(backgroundDisplayMode: .always))
                         .frame(height : 390)
                         
+                    }else {
+                        ZStack{
+                            Label("There is no photos" , systemImage: "photo")
+                        }
+                        .frame(height : 390)
+                        
                     }
                 case .video:
 
@@ -61,6 +69,12 @@ struct SampleNewRealEstate: View {
                         VideoPlayer(player: AVPlayer(url: videoURL))
                         .frame(width: UIScreen.main.bounds.width - 20, height:390)
                         .cornerRadius(20)
+                    }else {
+                        ZStack{
+                            Label("There is no video" , systemImage: "video.fill")
+                        }
+                        .frame(height : 390)
+                        
                     }
                 }
                
@@ -302,12 +316,13 @@ struct SampleNewRealEstate: View {
                             }
                 
                 Button {
-                    print ("Buttton Pressed")
 
+                    
                     realEstate.ownerId = firebaseUserManger.user.id
                     firebaseRealEstateManger.addRealEstate(realEstate: realEstate, images: images, videoURL: VideoURL) { isSecces in
                         
                         if isSecces {
+                            print("reale Estate aadded to store ! ")
                             
                         }
                         
@@ -330,6 +345,12 @@ struct SampleNewRealEstate: View {
                 
         }
             .navigationTitle("Title")
+            .onAppear{
+                
+                region.center = realEstate.location
+                region.span = realEstate.city.extraZoomLevel
+
+            }
             
     }
 }
@@ -337,8 +358,7 @@ struct SampleNewRealEstate: View {
 struct SampleNewRealEstate_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SampleNewRealEstate( realEstate: .constant(realEstateExamble)  , images: .constant([UIImage(named: "Image1")!,UIImage(named :"Image2")!]),VideoURL: .constant(URL(string:"")),
-                                 region: .constant(.init(center: City.arrass.coordinate , span: City.arrass.extraZoomLevel)) )
+            SampleNewRealEstate( realEstate: .constant(realEstateExamble)  , images: .constant([UIImage(named: "Image1")!,UIImage(named :"Image2")!]),VideoURL: .constant(URL(string:"")))
                 .environmentObject(FirebaseRealEstateManger())
                 .environmentObject(FirebaseUserManger())
 

@@ -299,7 +299,6 @@ struct ProfileView: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.black)
                     }
 
                 }

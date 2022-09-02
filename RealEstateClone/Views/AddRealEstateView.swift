@@ -455,7 +455,7 @@ struct AddRealEstateView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12)
                                 .foregroundColor(.blue)
-                            .frame(width: 150, height: 40)
+                            .frame(width: 125, height: 40)
 
                             HStack {
                                 Image(systemName: "envelope.fill")
@@ -475,7 +475,7 @@ struct AddRealEstateView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12)
                                 .foregroundColor(.green)
-                            .frame(width: 150, height: 40)
+                            .frame(width: 125, height: 40)
 
                             HStack {
                                 Image(systemName: "phone.fill")
@@ -499,7 +499,7 @@ struct AddRealEstateView: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
                             .foregroundColor(.purple)
-                        .frame(width: 300, height: 40)
+                        .frame(width: 250, height: 40)
 
                         HStack {
                             Image(systemName: "phone.fill")
@@ -536,7 +536,7 @@ struct AddRealEstateView: View {
                     Divider()
                         .padding()
                     NavigationLink {
-                        SampleNewRealEstate( realEstate: $viewModel.newRealEstate, images: $viewModel.images, VideoURL: $viewModel.videoURL, region: $viewModel.coordinateRegion )
+                        SampleNewRealEstate( realEstate: $viewModel.newRealEstate, images: $viewModel.images, VideoURL: $viewModel.videoURL)
                     } label: {
                         Text("show sample before upload")
                             .foregroundColor(.blue)

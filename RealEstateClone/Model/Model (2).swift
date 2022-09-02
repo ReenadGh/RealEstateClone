@@ -166,7 +166,7 @@ enum City: String, CaseIterable, Codable {
     
     var extraZoomLevel: MKCoordinateSpan {
         switch self {
-        case .arrass:     return .init(latitudeDelta: 2, longitudeDelta: 2)
+        case .arrass:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         case .qassim:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         case .riyadh:     return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         case .almadinah:  return .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
