@@ -25,15 +25,10 @@ struct AddRealEstateView: View {
     @StateObject var  viewModel = addRealEstateModel()
     @State var inputImgs : [UIImage] = []
     @State private var showingImagesPicker = false
-    @State var  daysTimeSelection : [DayTimeSelection] = [
-        .init(day: .friday, fromTime: Date(), toTime: Date()),
-        .init(day: .saturday, fromTime: Date(), toTime: Date()),
-        .init(day: .sunday, fromTime: Date(), toTime: Date()),
-        .init(day: .monday, fromTime: Date(), toTime: Date()),
-        .init(day: .tuesday, fromTime: Date(), toTime: Date()),
-        .init(day: .wednesday, fromTime: Date(), toTime: Date()),
-        .init(day: .thursday, fromTime: Date(), toTime: Date())
-    ]
+
+    
+    @Binding var isAddNewEstateViewPresented : Bool 
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -420,123 +415,12 @@ struct AddRealEstateView: View {
            Text("LAT : \(viewModel.newRealEstate.location.latitude)     LON : \(viewModel.newRealEstate.location.longitude)")
            Text("")
        }
-                Group{
-                    VStack{
-                        HStack{
-                       Text("Contact")
-                      .font(.system(size: 25 , weight: .bold))
-                      .foregroundColor(.gray)
-                       Spacer()
-
-
-                        }.padding(.vertical , 8).padding(.horizontal , 15)
-        HStack{
-            VStack {
-                Image("people-1")
-                 .resizable()
-                 .scaledToFill()
-                 .frame(width: 60, height: 60, alignment: .center)
-                 .clipShape(Circle())
-                 .padding(8)
-                 .overlay(Circle().stroke()
-                    .foregroundColor(.gray)
-             )
-                Text(Lorem.firstName)
-                    .font(.footnote)
-                    .frame(width: 60, height:20)
-
-            }
-            VStack {
-                HStack{
-                    Button {
-
-
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .foregroundColor(.blue)
-                            .frame(width: 125, height: 40)
-
-                            HStack {
-                                Image(systemName: "envelope.fill")
-                                    .foregroundColor(.white)
-                                Text("EMAIL")
-                                    .foregroundColor(.white)
-                                    .fontWeight(.bold)
-
-                            }
-                        }
-                    }.buttonStyle(.borderless)
-
-                    Button {
-
-
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .foregroundColor(.green)
-                            .frame(width: 125, height: 40)
-
-                            HStack {
-                                Image(systemName: "phone.fill")
-                                    .foregroundColor(.white)
-                                Text("WhatsApp")
-                                    .foregroundColor(.white)
-                                    .fontWeight(.bold)
-
-                            }
-                        }
-                    }.buttonStyle(.borderless)
-
-                }
-
-
-
-                Button{
-               
-
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.purple)
-                        .frame(width: 250, height: 40)
-
-                        HStack {
-                            Image(systemName: "phone.fill")
-                                .foregroundColor(.white)
-                                .imageScale(.large)
-                            Text("055xxxxxxx")
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                        }
-                    }
-                }
-            }
-        }
-        
-        ForEach (daysTimeSelection , id : \.self) { dayTime in
-            
-            
-            HStack( spacing: 20){
-                
-                Text(dayTime.day.title)
-                    .fontWeight(.bold)
-                Spacer()
-                Text(dayTime.fromTime.convertDate(formattedString: .timeOnly))
-                Text("-")
-                Text(dayTime.toTime.convertDate(formattedString: .timeOnly))
-
-            }.padding(10).background(Color(.systemGray6)).cornerRadius(10).padding(.horizontal , 25).padding(.vertical , 2)
-
-        }
-        
-                    }
-                }
+       
                 Group {
                     Divider()
                         .padding()
                     NavigationLink {
-                        SampleNewRealEstate( realEstate: $viewModel.newRealEstate, images: $viewModel.images, VideoURL: $viewModel.videoURL)
+                        SampleNewRealEstate( realEstate: $viewModel.newRealEstate, images: $viewModel.images, VideoURL: $viewModel.videoURL ,isAddNewEstateViewPresented: $isAddNewEstateViewPresented)
                     } label: {
                         Text("show sample before upload")
                             .foregroundColor(.blue)
@@ -570,7 +454,7 @@ struct AddRealEstateView: View {
 
 struct AddRealEstate_Previews: PreviewProvider {
     static var previews: some View {
-        AddRealEstateView()
+        AddRealEstateView( isAddNewEstateViewPresented: .constant(true))
             .environmentObject(FirebaseRealEstateManger())
     }
 }

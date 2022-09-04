@@ -11,7 +11,7 @@ import SwiftUI
 import MapKit
 import LoremSwiftum
 
-let realEstateExamble : RealEstate = .init(id: "132", images: ["Image 1","Image 3","Image 2","Image 4","Image 5"], description: Lorem.tweet, beds: Int.random(in: 1...4), baths: Int.random(in: 1...4), livingRooms: Int.random(in: 1...4), space: Int.random(in: 1...4), ovens: Int.random(in: 1...4), fridges: Int.random(in: 1...4), microwaves: Int.random(in: 1...4), airConditions: Int.random(in: 1...4), isSmart: true, hasWiFi: false, hasPool: false, hasElevator: true, hasGym: true, age: Int.random(in: 1...4), location: City.arrass.coordinate, saleCategory: SaleCategory.rent, city: City.arrass, type: RealEstateType.apartment, offer: OfferType.daily, isAvailable: true , price: 1000 , videoStringURL: "https://bit.ly/swswift")
+let realEstateExamble : RealEstate = .init(id: "132", images: ["https://imageio.forbes.com/specials-images/imageserve/60ec4e3d1ec83fe0e5a2268b/House-with---sold---sign-in-front-yard/960x0.jpg?format=jpg&width=960","Image 3","Image 2","Image 4","Image 5"], description: Lorem.tweet, beds: Int.random(in: 1...4), baths: Int.random(in: 1...4), livingRooms: Int.random(in: 1...4), space: Int.random(in: 1...4), ovens: Int.random(in: 1...4), fridges: Int.random(in: 1...4), microwaves: Int.random(in: 1...4), airConditions: Int.random(in: 1...4), isSmart: true, hasWiFi: false, hasPool: false, hasElevator: true, hasGym: true, age: Int.random(in: 1...4), location: City.arrass.coordinate, saleCategory: SaleCategory.rent, city: City.arrass, type: RealEstateType.apartment, offer: OfferType.daily, isAvailable: true , price: 1000 , videoStringURL: "https://bit.ly/swswift")
 
 enum SaleCategory: String, CaseIterable, Codable{
     case sale

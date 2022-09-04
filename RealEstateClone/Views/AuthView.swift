@@ -129,10 +129,11 @@ struct AuthView: View {
                         Button {
                             
                             // MARK: - Register Function Call
-                            guard let userLocation = locationManger.userLocation?.coordinate else{return}
+                          
                             
                             isloading.toggle()
                             if isNewUser{
+                                guard let userLocation = locationManger.userLocation?.coordinate else{return}
                                 firebaseUserManger.createNewUser(mail: mail, password: password, userName: username, location: userLocation, userPhoto: userImg) { isSuccess , error in
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
                                         if isSuccess {

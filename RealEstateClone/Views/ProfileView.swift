@@ -93,7 +93,7 @@ struct ProfileView: View {
                 
                 Section {
                     NavigationLink {
-                
+                UserRealEstatesListView()
                     } label: {
                         HStack {
                             Image(systemName: "building.fill")

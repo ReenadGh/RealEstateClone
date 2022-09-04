@@ -19,6 +19,8 @@
 		B81DE1E528A084FE0019C86B /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81DE1E428A084FE0019C86B /* AuthView.swift */; };
 		B81DE1E728A0FD630019C86B /* ViewExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81DE1E628A0FD630019C86B /* ViewExtention.swift */; };
 		B83DC40E28BBAE8C004F98FA /* LoremSwiftum in Frameworks */ = {isa = PBXBuildFile; productRef = B83DC40D28BBAE8C004F98FA /* LoremSwiftum */; };
+		B862644028C37D7700AC1F97 /* UserRealEstatesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B862643F28C37D7600AC1F97 /* UserRealEstatesListView.swift */; };
+		B862644228C37DA100AC1F97 /* UserRealEstateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B862644128C37DA100AC1F97 /* UserRealEstateView.swift */; };
 		B86394EB28AA92B100049657 /* cornerRadiusExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86394EA28AA92B100049657 /* cornerRadiusExtention.swift */; };
 		B86394ED28ACC81300049657 /* RealEstateDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86394EC28ACC81300049657 /* RealEstateDetailsView.swift */; };
 		B8783A2E28A4D76300B28B64 /* MediaOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8783A2A28A4D76200B28B64 /* MediaOptions.swift */; };
@@ -61,6 +63,8 @@
 		B81DE1DD28A084CE0019C86B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B81DE1E428A084FE0019C86B /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		B81DE1E628A0FD630019C86B /* ViewExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtention.swift; sourceTree = "<group>"; };
+		B862643F28C37D7600AC1F97 /* UserRealEstatesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRealEstatesListView.swift; sourceTree = "<group>"; };
+		B862644128C37DA100AC1F97 /* UserRealEstateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRealEstateView.swift; sourceTree = "<group>"; };
 		B86394EA28AA92B100049657 /* cornerRadiusExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cornerRadiusExtention.swift; sourceTree = "<group>"; };
 		B86394EC28ACC81300049657 /* RealEstateDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealEstateDetailsView.swift; sourceTree = "<group>"; };
 		B8783A2A28A4D76200B28B64 /* MediaOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOptions.swift; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 				B8783A5E28A9512B00B28B64 /* updatePhoneNumView.swift */,
 				B8783A5528A7BBA000B28B64 /* ProfileView.swift */,
 				B8E6BA7728B79F700056AFCA /* SampleNewRealEstate.swift */,
+				B862643F28C37D7600AC1F97 /* UserRealEstatesListView.swift */,
 				B80E61C428AF8A4B0085CC6E /* AddRealEstateView.swift */,
 				B81DE1E428A084FE0019C86B /* AuthView.swift */,
 				B8783A5728A7EB3700B28B64 /* Components */,
@@ -196,6 +201,7 @@
 		B8783A5728A7EB3700B28B64 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B862644128C37DA100AC1F97 /* UserRealEstateView.swift */,
 				B80E61BD28AD4E320085CC6E /* AmenitiesView.swift */,
 				B80E61C828B514180085CC6E /* AddNewApplianceView.swift */,
 				B80E61C628B5135A0085CC6E /* AddAmenitiesView.swift */,
@@ -304,6 +310,7 @@
 				B80E61C728B5135A0085CC6E /* AddAmenitiesView.swift in Sources */,
 				B86394EB28AA92B100049657 /* cornerRadiusExtention.swift in Sources */,
 				B8783A4F28A61FFE00B28B64 /* FirebaseUserManger.swift in Sources */,
+				B862644028C37D7700AC1F97 /* UserRealEstatesListView.swift in Sources */,
 				B8E6BA7428B62CED0056AFCA /* mapKitView.swift in Sources */,
 				B80E61C928B514180085CC6E /* AddNewApplianceView.swift in Sources */,
 				B81DE1E728A0FD630019C86B /* ViewExtention.swift in Sources */,
@@ -321,6 +328,7 @@
 				B8783A5328A689CE00B28B64 /* progressView.swift in Sources */,
 				B80E61C528AF8A4C0085CC6E /* AddRealEstateView.swift in Sources */,
 				B8783A5128A67F2C00B28B64 /* HomeView.swift in Sources */,
+				B862644228C37DA100AC1F97 /* UserRealEstateView.swift in Sources */,
 				B80E61BE28AD4E330085CC6E /* AmenitiesView.swift in Sources */,
 				B8783A2F28A4D76300B28B64 /* MediaPicker-iOS.swift in Sources */,
 				B8783A5628A7BBA000B28B64 /* ProfileView.swift in Sources */,

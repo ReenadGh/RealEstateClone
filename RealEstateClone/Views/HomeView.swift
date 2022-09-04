@@ -47,21 +47,23 @@ struct HomeView: View {
                     } label: {
                         
                         HStack{
-                            if realEstate.images.isEmpty{
+                           // if (!RealEstate.images.isEmpty){
                             WebImage(url: URL(string: realEstate.images[0]))
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 100, height: 130)
+                                .frame(width: 100, height: 120)
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                            }else{
-                                
-                                ZStack{
-                                    Image(systemName : "photo")
-                                    
-                                }
-                                .frame(width: 100, height: 130)
-
-                            }
+//                            }else{
+//
+//                                ZStack{
+//                                    Image(systemName : realEstate.type.imageName)
+//                                        .foregroundColor(.black)
+//
+//                                }
+//                                .frame(width: 100, height: 120)
+//                                .background(Color.white)
+//                                .clipShape(RoundedRectangle(cornerRadius: 20))
+//                            }
                             Divider()
                             Spacer()
                             
@@ -70,9 +72,9 @@ struct HomeView: View {
                                 HStack {
                                     Text("\(realEstate.price) SR")
                                     Text("·")
-                                    Image(systemName : SaleCategory.rent.imageName)
+                                    Image(systemName : realEstate.saleCategory.imageName)
                                         .foregroundColor(.white)
-                                    Text(SaleCategory.rent.title)
+                                    Text(realEstate.saleCategory.title)
                                         .foregroundColor(.cyan)
                                     
 
@@ -115,14 +117,14 @@ struct HomeView: View {
                                     
                                     HStack{
                                         Image(systemName: "photo.fill")
-                                        Text("\(realEstate.space)")
+                                        Text("\(realEstate.images.count)")
 
                                     }  .font(.system(size : 12 ,weight : .semibold))
                                         .frame(width: 50,height:28)
                                             .background(Color.gray).cornerRadius(12)
                                     HStack{
                                         Image(systemName: "ruler.fill")
-                                        Text("\(realEstate.space)")
+                                        Text("\(realEstate.livingRooms)")
 
                                     }  .font(.system(size : 12 ,weight : .semibold))
                                         .frame(width: 50,height:28)
@@ -137,7 +139,7 @@ struct HomeView: View {
                             .background(popUpColor).cornerRadius(12)
                             .overlay(
                                 Button {
-                                    selectedRealEstate = nil
+                                    selectedRealEstate = RealEstate()
                                 } label: {
                                     Image(systemName :"eye.slash")
                                         .foregroundColor(.yellow)
@@ -146,11 +148,10 @@ struct HomeView: View {
                                         .padding(.trailing , 10)
                                 },alignment : .topTrailing
                                       )
-                        
                             .scaleEffect(selectedRealEstate == realEstate ? 1: 0)
                             .opacity(selectedRealEstate == realEstate ? 1: 0)
                             .animation(.spring(), value: selectedRealEstate == realEstate)
-                           
+                       
                     }
 
                         
@@ -177,7 +178,7 @@ struct HomeView: View {
                                         .imageScale(.large)
                                 }
 
-                                Text ("1000.00 SR")
+                                Text ("\(realEstate.price) SR")
                                     .foregroundColor(.white)
                                 Image(systemName : "house")
                                     .foregroundColor(.white)
@@ -234,7 +235,7 @@ struct HomeView: View {
             }
             
                 .fullScreenCover(isPresented: $isAddNewEstateViewPresented) {
-                AddRealEstateView()
+                AddRealEstateView(isAddNewEstateViewPresented: $isAddNewEstateViewPresented)
             }
             
                 .fullScreenCover(isPresented: $isAuthViewPresented) {

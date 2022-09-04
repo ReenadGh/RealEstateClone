@@ -20,11 +20,12 @@ struct SampleNewRealEstate: View {
         @Binding var realEstate : RealEstate
         @Binding var images : [UIImage]
         @Binding var VideoURL : URL?
-    
-    
+        @Binding var isAddNewEstateViewPresented : Bool
+
+        @State var isloading : Bool = false
         @State var selectedMediaType : MediaType = .photo
         @State private var scaleMapAnnotation : Double = 0.0
-    @State var region : MKCoordinateRegion = .init()
+        @State var region : MKCoordinateRegion = .init()
 
         var body: some View {
             ScrollView{
@@ -215,7 +216,7 @@ struct SampleNewRealEstate: View {
                                 .padding(.bottom , 1)
                 HStack{
                     VStack {
-                        Image("people-1")
+                        WebImage(url: URL(string: firebaseUserManger.user.profileImageUrl))
                          .resizable()
                          .scaledToFill()
                          .frame(width: 60, height: 60, alignment: .center)
@@ -224,7 +225,7 @@ struct SampleNewRealEstate: View {
                          .overlay(Circle().stroke()
                             .foregroundColor(.gray)
                      )
-                        Text(Lorem.firstName)
+                        Text(firebaseUserManger.user.username)
                             .font(.footnote)
                             .frame(width: 60, height:20)
 
@@ -243,7 +244,7 @@ struct SampleNewRealEstate: View {
                                     HStack {
                                         Image(systemName: "envelope.fill")
                                             .foregroundColor(.white)
-                                        Text("EMAIL")
+                                        Text(firebaseUserManger.user.email)
                                             .foregroundColor(.white)
                                             .fontWeight(.bold)
 
@@ -317,13 +318,23 @@ struct SampleNewRealEstate: View {
                 
                 Button {
 
-                    
+                    isloading.toggle()
+
                     realEstate.ownerId = firebaseUserManger.user.id
                     firebaseRealEstateManger.addRealEstate(realEstate: realEstate, images: images, videoURL: VideoURL) { isSecces in
                         
                         if isSecces {
-                            print("reale Estate aadded to store ! ")
+                            print("DEBUG : reale Estate aadded to store! ")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                isloading.toggle()
+                                isAddNewEstateViewPresented = false
+
+                            }
                             
+                        }else {
+                            isloading.toggle()
+                            print(" DEBUG : not able to add reale Estate to store   ")
+
                         }
                         
                     }
@@ -352,13 +363,17 @@ struct SampleNewRealEstate: View {
 
             }
             
+            .overlay(
+                customProgressView().isHidden(!isloading, remove: !isloading)
+            )
+            
     }
 }
 
 struct SampleNewRealEstate_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SampleNewRealEstate( realEstate: .constant(realEstateExamble)  , images: .constant([UIImage(named: "Image1")!,UIImage(named :"Image2")!]),VideoURL: .constant(URL(string:"")))
+            SampleNewRealEstate( realEstate: .constant(realEstateExamble)  , images: .constant([UIImage(named: "Image1")!,UIImage(named :"Image2")!]),VideoURL: .constant(URL(string:"")), isAddNewEstateViewPresented: .constant(true))
                 .environmentObject(FirebaseRealEstateManger())
                 .environmentObject(FirebaseUserManger())
 

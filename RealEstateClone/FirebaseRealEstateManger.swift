@@ -13,6 +13,7 @@ import FirebaseFirestore
 
 class FirebaseRealEstateManger : NSObject, ObservableObject  {
     @Published  var realEstates : [RealEstate] = []
+    @Published  var userRealEstates : [RealEstate] = []
 
     let auth : Auth
     let firestore : Firestore
@@ -26,6 +27,7 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
         super.init()
         
         self.fetchRealEstate()
+        self.fetchUserRealEstates()
 
 
     }
@@ -55,6 +57,24 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
             completion(user)
         }
     }
+    
+    
+    func fetchUserRealEstates(){
+        
+        guard let userId = auth.currentUser?.uid else {
+            return
+        }
+        firestore.collection("users").document(userId).collection("realEstate").addSnapshotListener{ quereySnapshot, error in
+            if let error = error {
+                print("DEBUG : \(error) ")
+                return
+            }
+            guard let userRealEstates = quereySnapshot?.documents.compactMap({try? $0.data(as: RealEstate.self)}) else{return }
+            
+            self.userRealEstates = userRealEstates
+            
+        }
+    }
 
     
     func addRealEstate( realEstate : RealEstate , images : [UIImage] , videoURL :URL?,  completion : @escaping ((Bool)->())){
@@ -69,6 +89,8 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
                 do{
                     try self.firestore.collection("realEstate").document(realEstate.id).setData(from: realEstate)
                     
+                    try self.firestore.collection("users").document(realEstate.ownerId).collection("realEstate").document(realEstate.id).setData(from : realEstate)
+
                 }catch{
                     print("error to upload realeEstate")
                     print(error.localizedDescription)
@@ -134,7 +156,7 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
         
         for image in images {
             let imageId = UUID().uuidString
-            guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+            guard let imageData = image.jpegData(compressionQuality: 0.4) else {return }
             let refStorage = storage.reference(withPath: userid + "/" + imageId)
             refStorage.putData(imageData) { storageMetadata, error in
                 if let error = error {
@@ -150,7 +172,7 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
                     guard let imageURL =  url?.absoluteString else {return }
                     imagesUrlString.append(imageURL)
                     completion(imagesUrlString)
-
+                  
                 }
         }
 
