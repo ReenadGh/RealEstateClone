@@ -17,12 +17,9 @@ struct RealEstateDetailsView: View {
     @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
 
     @Binding var realEstate : RealEstate
-    @State var region : MKCoordinateRegion = .init()
-
-    @State var selectedMediaType : MediaType = .photo
+  //  @State var selectedMediaType : MediaType = .photo
     @State var realEstateOwner : User = User()
-
-    @State private var scaleMapAnnotation : Double = 0.0
+    
     @State var  daysTimeSelection : [DayTimeSelection] = [
         .init(day: .friday, fromTime: Date(), toTime: Date()),
         .init(day: .saturday, fromTime: Date(), toTime: Date()),
@@ -32,111 +29,16 @@ struct RealEstateDetailsView: View {
         .init(day: .wednesday, fromTime: Date(), toTime: Date()),
         .init(day: .thursday, fromTime: Date(), toTime: Date())
     ]
+    
+
     var body: some View {
             ScrollView{
-                Picker (selection : $selectedMediaType) {
-                    ForEach  (MediaType.allCases , id: \.self) { mediaType in
-                        Text(mediaType.title)
-                    }
-                } label: {
-                }.labelsHidden().pickerStyle(.segmented).padding()
+                MediaPickerView(realEstate: $realEstate )
 
                 
-                switch selectedMediaType {
-                case .photo:
-                    TabView{
-                    if !realEstate.images.isEmpty{
-                    
-                    ForEach(realEstate.images , id: \.self){ imageURLString in
-                        WebImage(url: URL(string: imageURLString))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.width - 20, height:350 )
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .offset( y: -28)
-                    }
-                   
-                    }else {
-                        
-                        ZStack{
-                            Label("There is no photos" , systemImage: "photo")
-                        }
-                        .frame(height : 390)
-
-                    }
-                    }
-                    .tabViewStyle(.page(indexDisplayMode: .always))
-                        .indexViewStyle(.page(backgroundDisplayMode: .always))
-                        .frame(height : 390)
-                        .overlay(
-                            VStack {
-                                HStack {
-                                    HStack{
-                                        Image(systemName: "photo")
-                                        Text("\(realEstate.images.count)")
-                                    }.padding(12).background(Material.ultraThickMaterial).cornerRadius(12)
-                                    Spacer()
-                                    Image(systemName: "bookmark")
-                                        .padding(12)
-                                        .background(Material.ultraThickMaterial)
-                                        .clipShape(Circle())
-
-                                }.padding(.horizontal , 10)
-                                
-                                Spacer()
-                                
-                                HStack {
-                                    HStack{
-                                        Image(systemName:realEstate.saleCategory.imageName)
-                                        Text("\(realEstate.saleCategory.title)")
-                                    }.padding(12).background(Material.ultraThickMaterial).cornerRadius(12)
-                                    Spacer()
-                                    Text("\(realEstate.price ,specifier: "%0.0f") SR")
-                                        .padding(12)
-                                        .background(Material.ultraThickMaterial)
-                                        .cornerRadius(12)
-
-                                }.padding(.horizontal , 10)
-                                
-                                    .padding(.bottom , 40)
-                            }
-                            
-                        )
-                    
-                     
-                   
-                case .video:
-                    if realEstate.videoStringURL != "" {
-                    VideoPlayer(player: AVPlayer(url: URL(string: realEstate.videoStringURL)!))
-                        .frame(width: UIScreen.main.bounds.width - 20, height:390)
-                        .cornerRadius(20)
-                    } else {
-                        ZStack{
-                            Label("There is no video" , systemImage: "video.fill")
-                        }
-                        .frame(height : 390)
-                        
-                    }
-                }
                
 
-                VStack (alignment: .leading) {
-                    HStack {
-                        Text("Info")
-                            .font(.title)
-                            .fontWeight(.heavy)
-                        .foregroundColor(.gray)
-                        .padding(.leading , 12)
-                        Spacer()
-
-                    }
-                    .padding(.bottom , 1)
-
-                    Text(realEstate.description)
-                        .font(.system(size: 17 , weight: .semibold))
-                        .padding(.horizontal , 12)
-
-                }
+                InfoRealEstateView(realEstate: $realEstate)
 
                 Divider()
                     .padding(.horizontal , 70)
@@ -154,8 +56,7 @@ struct RealEstateDetailsView: View {
 
                     }
                     .padding(.bottom , 14)
-
-
+  
                     ApplianceView(realEstate: $realEstate)
                 }
 
@@ -197,40 +98,7 @@ struct RealEstateDetailsView: View {
 
                     }
                     .padding(.bottom , 8)
-                    Map(coordinateRegion: $region, annotationItems: [realEstate]) { realEstate in
-                        MapAnnotation(coordinate: realEstate.location) {
-
-                            VStack (spacing : 10) {
-
-                                Text("\(realEstate.price) SR")
-
-                                    .padding()
-                                    .background(Material.ultraThinMaterial).cornerRadius(20)
-                                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.blue))
-
-                                ZStack {
-                                    Circle()
-                                        .frame(width: 20, height: 20)
-                                    .foregroundColor(.blue)
-                                    Circle()
-                                        .frame(width: 70, height: 70)
-                                    .foregroundColor(.blue)
-                                    .opacity(0.3)
-                                    .scaleEffect(scaleMapAnnotation)
-                                    .animation(Animation.easeOut(duration: 3).repeatForever(autoreverses: false), value: scaleMapAnnotation)
-
-                                    .onAppear{
-
-                                            scaleMapAnnotation = 1
-                                         }
-
-                                }
-                            }
-
-
-                        }
-                    }.frame(width: UIScreen.main.bounds.width - 40, height: 300)
-                        .cornerRadius(20)
+                    MapRealEstateView( realEstate: $realEstate)
 
                     Divider()
                         .padding(.horizontal , 70)
@@ -354,8 +222,6 @@ struct RealEstateDetailsView: View {
                 
         }.onAppear{
             
-            region.center = realEstate.location
-            region.span = realEstate.city.extraZoomLevel
             firebaseRealEstateManger.fetchUserById(userId: realEstate.ownerId, completion: { user in
                 self.realEstateOwner = user
             })
@@ -378,3 +244,188 @@ struct RealEstateDetailsView_Previews: PreviewProvider {
     }
 }
 
+
+struct MediaPickerView: View {
+    @State var selectedMediaType : MediaType = .photo
+    @Binding var realEstate : RealEstate
+    @EnvironmentObject var firebaseUserManger : FirebaseUserManger
+    @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
+
+    var isBookMarked : Bool{
+        firebaseRealEstateManger.bookMarkRealEstates.contains(where: {
+            
+            $0.id == realEstate.id
+        })
+    }
+    var body: some View {
+        
+        
+        Picker (selection : $selectedMediaType) {
+            ForEach  (MediaType.allCases , id: \.self) { mediaType in
+                Text(mediaType.title)
+            }
+        } label: {
+        }.labelsHidden().pickerStyle(.segmented).padding()
+        
+        
+        switch selectedMediaType {
+        case .photo:
+            TabView{
+            if !realEstate.images.isEmpty{
+            
+            ForEach(realEstate.images , id: \.self){ imageURLString in
+                WebImage(url: URL(string: imageURLString))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: UIScreen.main.bounds.width - 20, height:350 )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .offset( y: -28)
+            }
+           
+            }else {
+                
+                ZStack{
+                    Label("There is no photos" , systemImage: "photo")
+                }
+                .frame(height : 390)
+
+            }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .frame(height : 390)
+                .overlay(
+                    VStack {
+                        HStack {
+                            HStack{
+                                Image(systemName: "photo")
+                                Text("\(realEstate.images.count)")
+                            }.padding(12).background(Material.ultraThickMaterial).cornerRadius(12)
+                            Spacer()
+                            
+                            
+                            Button {
+                                firebaseRealEstateManger.bookMarkRealEstate(realEstate: realEstate, userId: firebaseUserManger.user.id)
+                            } label: {
+                                Image(systemName:  isBookMarked ? "bookmark.fill": "bookmark")
+                                    .padding(12)
+                                    .background(Material.ultraThinMaterial)
+                                    .clipShape(Circle())
+                            }                                            .foregroundColor(Color(.label))
+
+
+                          
+
+                        }.padding(.horizontal , 15)
+                        
+                        Spacer()
+                        
+                        HStack {
+                            HStack{
+                                Image(systemName:realEstate.saleCategory.imageName)
+                                Text("\(realEstate.saleCategory.title)")
+                            }.padding(12).background(Material.ultraThinMaterial).cornerRadius(12)
+                            Spacer()
+                            Text("\(realEstate.price ,specifier: "%0.0f") SR")
+                                .padding(12)
+                                .background(Material.ultraThickMaterial)
+                                .cornerRadius(12)
+
+                        }.padding(.horizontal , 15)
+                        
+                            .padding(.bottom , 40)
+                    }
+                    
+                )
+            
+             
+           
+        case .video:
+            if realEstate.videoStringURL != "" {
+            VideoPlayer(player: AVPlayer(url: URL(string: realEstate.videoStringURL)!))
+                .frame(width: UIScreen.main.bounds.width - 20, height:390)
+                .cornerRadius(20)
+            } else {
+                ZStack{
+                    Label("There is no video" , systemImage: "video.fill")
+                }
+                .frame(height : 390)
+                
+            }
+        }
+
+    }
+}
+
+struct InfoRealEstateView: View {
+    @Binding var realEstate : RealEstate
+
+    var body: some View {
+        VStack (alignment: .leading) {
+            HStack {
+                Text("Info")
+                    .font(.title)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.gray)
+                    .padding(.leading , 12)
+                Spacer()
+                
+            }
+            .padding(.bottom , 1)
+            
+            Text(realEstate.description)
+                .font(.system(size: 17 , weight: .semibold))
+                .padding(.horizontal , 12)
+            
+        }
+    }
+}
+
+struct MapRealEstateView: View {
+    @State var region : MKCoordinateRegion = .init()
+    @Binding var realEstate : RealEstate
+    @State private var scaleMapAnnotation : Double = 0.0
+
+    var body: some View {
+        Map(coordinateRegion: $region, annotationItems: [realEstate]) { realEstate in
+            MapAnnotation(coordinate: realEstate.location) {
+                
+                VStack (spacing : 10) {
+                    
+                    Text("\(realEstate.price) SR")
+                    
+                        .padding()
+                        .background(Material.ultraThinMaterial).cornerRadius(20)
+                        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.blue))
+                    
+                    ZStack {
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
+                        Circle()
+                            .frame(width: 70, height: 70)
+                            .foregroundColor(.blue)
+                            .opacity(0.3)
+                            .scaleEffect(scaleMapAnnotation)
+                            .animation(Animation.easeOut(duration: 3).repeatForever(autoreverses: false), value: scaleMapAnnotation)
+                        
+                            .onAppear{
+                                
+                                scaleMapAnnotation = 1
+                            }
+                        
+                    }
+                }
+                
+                
+            }
+        }.frame(width: UIScreen.main.bounds.width - 40, height: 300)
+            .cornerRadius(20)
+          
+                .onAppear{
+                    
+                    region.center = realEstate.location
+                    region.span = realEstate.city.extraZoomLevel
+            }
+    }
+}

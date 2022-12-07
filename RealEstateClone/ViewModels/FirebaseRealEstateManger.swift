@@ -14,6 +14,7 @@ import FirebaseFirestore
 class FirebaseRealEstateManger : NSObject, ObservableObject  {
     @Published  var realEstates : [RealEstate] = []
     @Published  var userRealEstates : [RealEstate] = []
+    @Published  var bookMarkRealEstates : [RealEstate] = []
 
     let auth : Auth
     let firestore : Firestore
@@ -28,11 +29,13 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
         
         self.fetchRealEstate()
         self.fetchUserRealEstates()
+        self.fetchBookMarkRealEstates()
 
 
     }
     
     func fetchRealEstate() {
+        print("fetching Real Estates ... ")
         firestore.collection("realEstate").addSnapshotListener { querySnapshot, error in
             if let error = error {
                 print("DEBUG : \(error) ")
@@ -40,10 +43,13 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
             }
             
              guard let realEstates = querySnapshot?.documents.compactMap({ try? $0.data(as:RealEstate.self )})else {return }
-            self.realEstates = realEstates
+            self.realEstates = realEstates.sorted{ $0.isAvailable && !$1.isAvailable}
         
         }
     }
+    
+    
+
     
     func fetchUserById(userId : String , completion : @escaping ((User)->()) ){
 
@@ -75,6 +81,24 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
             
         }
     }
+    
+    func fetchBookMarkRealEstates(){
+        
+        guard let userId = auth.currentUser?.uid else {
+            return
+        }
+        firestore.collection("users").document(userId).collection("bookmarks").addSnapshotListener{ quereySnapshot, error in
+            if let error = error {
+                print("DEBUG : \(error) ")
+                return
+            }
+            guard let bookmarkRealEstates = quereySnapshot?.documents.compactMap({try? $0.data(as: RealEstate.self)}) else{return }
+            
+            self.bookMarkRealEstates = bookmarkRealEstates
+            
+        }
+    }
+
 
     
     func addRealEstate( realEstate : RealEstate , images : [UIImage] , videoURL :URL?,  completion : @escaping ((Bool)->())){
@@ -102,6 +126,7 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
             
         
         }
+        
 
 
        
@@ -109,6 +134,74 @@ class FirebaseRealEstateManger : NSObject, ObservableObject  {
     
 }
     
+    func bookMarkRealEstate(realEstate : RealEstate , userId : String){
+        
+        do{
+        try  firestore.collection("users")
+            .document(userId)
+            .collection("bookmarks")
+            .document(realEstate.id)
+            .setData(from : realEstate)
+        }
+        catch {
+            
+            print("DEBUG : error in bookmark Real Estate !")
+        }
+    }
+    
+    func removeMarkRealEstate(realEstate : RealEstate ){
+        guard let userId = auth.currentUser?.uid else {
+            return
+        }
+        do{
+        try  firestore.collection("users")
+            .document(userId)
+            .collection("bookmarks")
+            .document(realEstate.id).delete()
+            
+        }
+        catch {
+            
+            print("DEBUG : error in delete bookmark Real Estate !")
+        }
+    }
+    
+    func markRealEstate(realEstate : RealEstate){
+      
+        do{
+        try  firestore.collection("users")
+            .document(realEstate.ownerId)
+            .collection("realEstate")
+            .document(realEstate.id)
+            .setData(from : realEstate)
+   
+        }
+        catch {
+            
+            print("DEBUG : error in mark Real Estate !")
+        }
+        
+        firestore.collection("realEstate").document(realEstate.id).delete()
+    }
+    
+    func reAddRealEstate(realEstate : RealEstate){
+      
+        do{
+        try  firestore.collection("users")
+            .document(realEstate.ownerId)
+            .collection("realEstate")
+            .document(realEstate.id)
+            .setData(from : realEstate)
+            
+            try self.firestore.collection("realEstate").document(realEstate.id).setData(from: realEstate)
+   
+        }
+        catch {
+            
+            print("DEBUG : error in ReAdd Real Estate !")
+        }
+        
+    }
     
     func uploadVideoToStorage (videourl : URL? , completion : @escaping ((String)->())){
         let videourl = videourl

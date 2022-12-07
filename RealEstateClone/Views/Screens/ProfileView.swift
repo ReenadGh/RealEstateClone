@@ -93,7 +93,7 @@ struct ProfileView: View {
                 
                 Section {
                     NavigationLink {
-                UserRealEstatesListView()
+                 UserRealEstatesListView()
                     } label: {
                         HStack {
                             Image(systemName: "building.fill")
@@ -113,7 +113,7 @@ struct ProfileView: View {
                 
                 Section {
                     NavigationLink {
-                
+                        UserFavRealEstates()
                     } label: {
                         HStack {
                             Image(systemName: "bookmark.fill")
@@ -127,7 +127,7 @@ struct ProfileView: View {
                     Text("BOOKMARKS")
 
                 } footer: {
-                    Text("visit real Estate you have booked ")
+                    Text("visit real Estate you have booked")
                 }
                 
                 
@@ -135,15 +135,30 @@ struct ProfileView: View {
                     VStack {
                         HStack {
                             VStack {
-                                WebImage(url: URL(string: firebaseUserManger.user.profileImageUrl))
-                                 .resizable()
-                                 .scaledToFill()
-                                 .frame(width: 60, height: 60, alignment: .center)
-                                 .clipShape(Circle())
-                                 .padding(8)
-                                 .overlay(Circle().stroke()
-                                    .foregroundColor(.gray)
-                             )
+                                
+                                if firebaseUserManger.user.profileImageUrl == "" {
+                                    Image("user-icon")
+                                     .resizable()
+                                     .scaledToFill()
+                                     .frame(width: 60, height: 60, alignment: .center)
+                                     .clipShape(Circle())
+                                     .padding(8)
+                                     .overlay(Circle().stroke()
+                                        .foregroundColor(.gray))
+                                    
+                                }else {
+                                    WebImage(url: URL(string: firebaseUserManger.user.profileImageUrl))
+                                     .resizable()
+                                     .scaledToFill()
+                                     .frame(width: 60, height: 60, alignment: .center)
+                                     .clipShape(Circle())
+                                     .padding(8)
+                                     .overlay(Circle().stroke()
+                                        .foregroundColor(.gray))
+                                    
+                                }
+                          
+                             
                                 Text(firebaseUserManger.user.username)
                                     .font(.footnote)
                                     .frame(width: 60, height:20)

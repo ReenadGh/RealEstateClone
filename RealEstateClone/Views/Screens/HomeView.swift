@@ -23,7 +23,6 @@ struct HomeView: View {
   
     
     @StateObject var locationManger : LocationManager = LocationManager()
-    @State var popUpColor = Color(#colorLiteral(red: 0.1855567396, green: 0.2185586691, blue: 0.2209784687, alpha: 1))
     var body: some View {
     
             
@@ -46,111 +45,7 @@ struct HomeView: View {
                            }
                     } label: {
                         
-                        HStack{
-                           // if (!RealEstate.images.isEmpty){
-                            WebImage(url: URL(string: realEstate.images[0]))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 120)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-//                            }else{
-//
-//                                ZStack{
-//                                    Image(systemName : realEstate.type.imageName)
-//                                        .foregroundColor(.black)
-//
-//                                }
-//                                .frame(width: 100, height: 120)
-//                                .background(Color.white)
-//                                .clipShape(RoundedRectangle(cornerRadius: 20))
-//                            }
-                            Divider()
-                            Spacer()
-                            
-                            
-                            VStack(alignment:.leading ,spacing : 7){
-                                HStack {
-                                    Text("\(realEstate.price) SR")
-                                    Text("·")
-                                    Image(systemName : realEstate.saleCategory.imageName)
-                                        .foregroundColor(.white)
-                                    Text(realEstate.saleCategory.title)
-                                        .foregroundColor(.cyan)
-                                    
-
-                                }
-                                
-                                Text(realEstate.description)
-                                    .font(.system(size : 13 ,weight : .semibold))
-                                    .lineLimit(2)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                
-                                
-                                HStack{
-                                    Image(systemName : realEstate.type.imageName)
-                                        .foregroundColor(.white)
-                                        .imageScale(.large)
-                                    Text(realEstate.type.title)
-                                        .font(.system(size : 14 ,weight : .semibold))
-
-                                }
-                                Divider()
-                                
-                                HStack{
-                                    
-                                    HStack{
-                                        Image(systemName: "bed.double")
-                                        Text("\(realEstate.beds)")
-                                        
-                                    }
-                                    .font(.system(size : 12 ,weight : .semibold))
-                                    .frame(width: 50,height:28)
-                                        .background(Color.blue).cornerRadius(12)
-                                    
-                                    HStack{
-                                        Image(systemName: "comb.fill")
-                                        Text("\(realEstate.baths)")
-
-                                    }                                  .font(.system(size : 12 ,weight : .semibold))
-                                        .frame(width: 50,height:28)
-                                            .background(Color.purple).cornerRadius(12)
-                                    
-                                    HStack{
-                                        Image(systemName: "photo.fill")
-                                        Text("\(realEstate.images.count)")
-
-                                    }  .font(.system(size : 12 ,weight : .semibold))
-                                        .frame(width: 50,height:28)
-                                            .background(Color.gray).cornerRadius(12)
-                                    HStack{
-                                        Image(systemName: "ruler.fill")
-                                        Text("\(realEstate.livingRooms)")
-
-                                    }  .font(.system(size : 12 ,weight : .semibold))
-                                        .frame(width: 50,height:28)
-                                            .background(Color.orange).cornerRadius(12)
-                                    
-                                }
-                                Spacer()
-                            }
-                        }.frame(width:350)
-                            .padding(12)
-                            .foregroundColor(.white)
-                            .background(popUpColor).cornerRadius(12)
-                            .overlay(
-                                Button {
-                                    selectedRealEstate = RealEstate()
-                                } label: {
-                                    Image(systemName :"eye.slash")
-                                        .foregroundColor(.yellow)
-                                        .imageScale(.large)
-                                        .padding(.top , 10)
-                                        .padding(.trailing , 10)
-                                },alignment : .topTrailing
-                                      )
-                            .scaleEffect(selectedRealEstate == realEstate ? 1: 0)
-                            .opacity(selectedRealEstate == realEstate ? 1: 0)
-                            .animation(.spring(), value: selectedRealEstate == realEstate)
+                        RealEstatePinView(realEstate: $realEstate, selectedRealEstate: $selectedRealEstate)
                        
                     }
 
@@ -255,6 +150,18 @@ struct HomeView: View {
                     isProfileViewPresented = true
                     }
                 }label: {
+                    
+                    if firebaseUserManger.user.profileImageUrl == "" {
+                        Image("user-icon")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 90, alignment: .center)
+                            .clipShape(Circle())
+                            .padding(8)
+                            .overlay(Circle().stroke()
+                               .foregroundColor(.gray))
+                        }
+                        else {
                     WebImage(url: URL(string: firebaseUserManger.user.profileImageUrl))
                      .resizable()
                      .scaledToFill()
@@ -262,8 +169,9 @@ struct HomeView: View {
                      .clipShape(Circle())
                      .padding(8)
                      .overlay(Circle().stroke()
-                        .foregroundColor(.gray)
-                 )
+                        .foregroundColor(.gray))
+                              }
+                 
                 }.padding(.leading , 30) .padding(.top , 18), alignment:.topLeading)
             
             
@@ -316,5 +224,119 @@ struct HomeView_Previews: PreviewProvider {
             .environmentObject(FirebaseUserManger())
             .environmentObject(FirebaseRealEstateManger())
 
+    }
+}
+
+struct RealEstatePinView: View {
+    @Binding var realEstate : RealEstate
+    @Binding var selectedRealEstate : RealEstate
+    @State var popUpColor = Color(#colorLiteral(red: 0.1855567396, green: 0.2185586691, blue: 0.2209784687, alpha: 1))
+
+    var body: some View {
+        HStack{
+             if (!realEstate.images.isEmpty){
+            WebImage(url: URL(string: realEstate.images[0]))
+                .resizable()
+                .scaledToFill()
+                .frame(width: 100, height: 120)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        }else{
+            
+                                            ZStack{
+                                                Image(systemName : realEstate.type.imageName)
+                                                    .foregroundColor(.black)
+            
+                                            }
+                                            .frame(width: 100, height: 120)
+                                            .background(Color.white)
+                                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        }
+            Divider()
+            Spacer()
+            
+            
+            VStack(alignment:.leading ,spacing : 7){
+                HStack {
+                    Text("\(realEstate.price) SR")
+                    Text("·")
+                    Image(systemName : realEstate.saleCategory.imageName)
+                        .foregroundColor(.white)
+                    Text(realEstate.saleCategory.title)
+                        .foregroundColor(.cyan)
+                    
+                    
+                }
+                
+                Text(realEstate.description)
+                    .font(.system(size : 13 ,weight : .semibold))
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                
+                
+                HStack{
+                    Image(systemName : realEstate.type.imageName)
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                    Text(realEstate.type.title)
+                        .font(.system(size : 14 ,weight : .semibold))
+                    
+                }
+                Divider()
+                
+                HStack{
+                    
+                    HStack{
+                        Image(systemName: "bed.double")
+                        Text("\(realEstate.beds)")
+                        
+                    }
+                    .font(.system(size : 12 ,weight : .semibold))
+                    .frame(width: 50,height:28)
+                    .background(Color.blue).cornerRadius(12)
+                    
+                    HStack{
+                        Image(systemName: "comb.fill")
+                        Text("\(realEstate.baths)")
+                        
+                    }                                  .font(.system(size : 12 ,weight : .semibold))
+                        .frame(width: 50,height:28)
+                        .background(Color.purple).cornerRadius(12)
+                    
+                    HStack{
+                        Image(systemName: "photo.fill")
+                        Text("\(realEstate.images.count)")
+                        
+                    }  .font(.system(size : 12 ,weight : .semibold))
+                        .frame(width: 50,height:28)
+                        .background(Color.gray).cornerRadius(12)
+                    HStack{
+                        Image(systemName: "ruler.fill")
+                        Text("\(realEstate.livingRooms)")
+                        
+                    }  .font(.system(size : 12 ,weight : .semibold))
+                        .frame(width: 50,height:28)
+                        .background(Color.orange).cornerRadius(12)
+                    
+                }
+                Spacer()
+            }
+        }.frame(width:350)
+            .padding(12)
+            .foregroundColor(.white)
+            .background(popUpColor).cornerRadius(12)
+            .overlay(
+                Button {
+                    selectedRealEstate = RealEstate()
+                } label: {
+                    Image(systemName :"eye.slash")
+                        .foregroundColor(.yellow)
+                        .imageScale(.large)
+                        .padding(.top , 10)
+                        .padding(.trailing , 10)
+                },alignment : .topTrailing
+            )
+            .scaleEffect(selectedRealEstate == realEstate ? 1: 0)
+            .opacity(selectedRealEstate == realEstate ? 1: 0)
+            .animation(.spring(), value: selectedRealEstate == realEstate)
     }
 }

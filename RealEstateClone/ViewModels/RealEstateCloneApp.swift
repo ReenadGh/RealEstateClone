@@ -28,7 +28,7 @@ struct RealEstateCloneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            MainView()
             //Rather than creating some data in view A, then passing it to view B, then view C, then view D before finally using it, you can create it in view A and put it into the environment so that views B, C, and D will automatically have access to it.
             
                 .environmentObject(firebaseUserManger)

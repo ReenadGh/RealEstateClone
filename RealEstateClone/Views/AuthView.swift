@@ -16,7 +16,6 @@ struct AuthView: View {
     @State var userImg : UIImage? 
     @State var inputImg : UIImage?
     @State var isloading : Bool = false
-    @State var isShowingHomeView : Bool = false
 
     
     @EnvironmentObject var firebaseUserManger : FirebaseUserManger
@@ -129,16 +128,15 @@ struct AuthView: View {
                         Button {
                             
                             // MARK: - Register Function Call
-                          
+                            guard let userLocation = locationManger.userLocation?.coordinate else{return}
                             
                             isloading.toggle()
                             if isNewUser{
-                                guard let userLocation = locationManger.userLocation?.coordinate else{return}
                                 firebaseUserManger.createNewUser(mail: mail, password: password, userName: username, location: userLocation, userPhoto: userImg) { isSuccess , error in
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
                                         if isSuccess {
                                             isloading.toggle()
-                                            isShowingHomeView = true
+                                            presentationMode.wrappedValue.dismiss()
                                         }else{
                                             isloading.toggle()
                                             errorMessage = error
@@ -150,7 +148,8 @@ struct AuthView: View {
                                 firebaseUserManger.logInToAccount(mail: mail, password: password) { isSuccess, error in
                                     if isSuccess {
                                         isloading.toggle()
-                                        isShowingHomeView = true
+                                        presentationMode.wrappedValue.dismiss()
+                                        
                                     }else{
                                         isloading.toggle()
                                         errorMessage = error
@@ -209,9 +208,7 @@ struct AuthView: View {
         .overlay(
             customProgressView().isHidden(!isloading, remove: !isloading)
         )
-        .fullScreenCover(isPresented: $isShowingHomeView) {
-            HomeView()
-        }
+   
         
     }
         

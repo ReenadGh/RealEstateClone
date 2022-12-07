@@ -38,7 +38,7 @@ enum SaleCategory: String, CaseIterable, Codable{
         switch self {
         case .sale:       return "SOLD"
         case .rent:       return "RENTED"
-        case .investment: return "Invseted"
+        case .investment: return "INVSETED"
         }
     }
     

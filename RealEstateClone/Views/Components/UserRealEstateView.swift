@@ -10,6 +10,8 @@ import SDWebImageSwiftUI
 
 struct UserRealEstateView: View {
     @Binding var realEstate : RealEstate
+    @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
+    var isItFavView : Bool = false
     fileprivate func extractedFunc() -> Image {
         return Image("ellipsis")
     }
@@ -19,7 +21,7 @@ struct UserRealEstateView: View {
         
         NavigationLink{
             
-            
+            RealEstateDetailsView(realEstate: $realEstate)
         }label: {
             HStack{
                 if (!realEstate.images.isEmpty){
@@ -102,14 +104,54 @@ struct UserRealEstateView: View {
         }
         .overlay(
            
+            ZStack{
+            if !isItFavView{
+                
+                // in UserReealEstates View
            Menu {
                
-               ForEach(/*@START_MENU_TOKEN@*/0 ..< 5/*@END_MENU_TOKEN@*/) { item in
+               ForEach(SaleCategory.allCases , id: \.self) { type in
                    Button {
-                       
+                       switch type{
+                       case .sale :
+                           realEstate.saleCategory = .sale
+                           if realEstate.isAvailable {
+                               realEstate.isAvailable = false
+                               firebaseRealEstateManger.markRealEstate(realEstate: realEstate)
+                           }else{
+                               realEstate.isAvailable = true
+                               firebaseRealEstateManger.reAddRealEstate(realEstate: realEstate)
+                           }
+                       case .investment :
+                           realEstate.saleCategory = .investment
+                           if realEstate.isAvailable {
+                               realEstate.isAvailable = false
+                               firebaseRealEstateManger.markRealEstate(realEstate: realEstate)
+                           }else{
+                               realEstate.isAvailable = true
+                               firebaseRealEstateManger.reAddRealEstate(realEstate: realEstate)
+                           }
+                       case .rent :
+                           realEstate.saleCategory = .rent
+                           if realEstate.isAvailable {
+                               realEstate.isAvailable = false
+                               firebaseRealEstateManger.markRealEstate(realEstate: realEstate)
+                           }else {
+                               realEstate.isAvailable = true
+                               firebaseRealEstateManger.reAddRealEstate(realEstate: realEstate)
+                           }
+                       }
                    } label: {
-                       Text("otion \(item)")
+                       
+                       if realEstate.isAvailable {
+                       Label("Mark as \(type.markedTitle)" , systemImage: type.imageName)
+                       }else{
+                           
+                           Label("Offer for \(type.title)" , systemImage: type.imageName)
+                           
 
+                       
+                       }
                    }
 
                }
@@ -125,16 +167,47 @@ struct UserRealEstateView: View {
                   Image(systemName: "ellipsis")
                    .foregroundColor(Color(.label))
            }
+                
+            }else{
+                
+                // in UserFavReealEstates View
+
+                Button (role: .destructive) {
+                    firebaseRealEstateManger.removeMarkRealEstate(realEstate: realEstate)
+                    
+                } label: {
+                    Label("remove", systemImage: "bookmark")
+
+                }
+
+                
+                
+            }
           
-       ,alignment: .topTrailing
+            }  , alignment: .topTrailing
        )
+        
+        .overlay(
+        
+            Text(realEstate.saleCategory.markedTitle)
+                .font(.system(size : 20 ))
+                .frame(width: 300 , height: 40)
+                .background(realEstate.saleCategory.saleColor                .opacity(0.9)
+)
+                .cornerRadius(20)
+                .rotationEffect(.init(degrees: -12))
+                .isHidden(realEstate.isAvailable, remove:realEstate.isAvailable)
+        
+        )
     }
 }
 
 struct UserRealEstateView_Previews: PreviewProvider {
     static var previews: some View {
-        UserRealEstateView(realEstate: .constant(realEstateExamble))
+        UserRealEstateView(realEstate: .constant(realEstateExamble), isItFavView: true)
             .padding()
             .previewLayout(.sizeThatFits)
+            .environmentObject(FirebaseRealEstateManger())
+
     }
 }

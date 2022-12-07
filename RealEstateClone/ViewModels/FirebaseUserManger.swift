@@ -32,6 +32,8 @@ class FirebaseUserManger : NSObject, ObservableObject {
     
     
     func fetchUser(){
+   
+
         guard let userId = auth.currentUser?.uid else {return}
         firestore.collection("users").document(userId).getDocument { documentSnapshot, error in
             if let error = error {
@@ -41,13 +43,13 @@ class FirebaseUserManger : NSObject, ObservableObject {
             
             guard let user = try? documentSnapshot?.data(as: User.self) else {return}
             self.user = user
+
         }
         
     }
     
     func isUserLogin() -> Bool{
-        fetchUser()
-        return user.id == ""
+        return user.id != ""
     }
     
     
@@ -59,8 +61,8 @@ class FirebaseUserManger : NSObject, ObservableObject {
                 print("DEBUG : log in user error : \(error.localizedDescription)")
                 return
             }
+            self.fetchUser()
             completion(true , "")
-            
         }
  }
     
@@ -75,6 +77,7 @@ class FirebaseUserManger : NSObject, ObservableObject {
         }
         
     }
+  
     func updateUserName(newUserName : String , completion : @escaping((Bool ) -> ())){
         
         self.user.username = newUserName
