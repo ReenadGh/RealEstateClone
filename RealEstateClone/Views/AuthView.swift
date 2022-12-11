@@ -58,21 +58,27 @@ struct AuthView: View {
                         
                         if  userImg == nil {
                             //userImg =
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .frame(width: 90, height: 90)
-                            .foregroundColor(.blue)
-                            .onTapGesture {
-                                showingImagePicker = true
+                            VStack {
+                                Image("user-icon")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .clipShape(Circle())
+                                    .frame(width: 90, height: 90)
+                                Text("+ Add Photo")
+                                    .foregroundColor(.blue)
                             }
-                            .onChange(of: inputImg){_ in
-                                loadImage()
-                            }
-                            .sheet(isPresented: $showingImagePicker) {
-                                ImagePicker(image: $inputImg)
-                                
-                            }
+                                .onTapGesture {
+                                    showingImagePicker = true
+                                }
+                                .onChange(of: inputImg){_ in
+                                    loadImage()
+                                }
+                                .sheet(isPresented: $showingImagePicker) {
+                                    ImagePicker(image: $inputImg)
+                                    
+                                }
                             .isHidden(!isNewUser, remove:!isNewUser)
+                            
 
                         }else{
                             Image(uiImage: userImg!)

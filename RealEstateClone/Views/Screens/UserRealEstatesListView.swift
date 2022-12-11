@@ -11,25 +11,54 @@ struct UserRealEstatesListView: View {
         @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
 
     var body: some View {
-        
+        VStack{
+            HStack {
+                
+                Text("My Real Estates")
+                    .font(.largeTitle).bold()
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                    .padding(.top , 10)
+
+                Spacer()
+            }
+            
         if (firebaseRealEstateManger.userRealEstates.isEmpty){
-            ZStack{
-                Label("You did't add any Real Estates ! " , systemImage: "bed.double.circle")
+            Spacer()
+            VStack(spacing : 15){
+                Image(systemName : "house.fill")
+                    .imageScale(.large)
+                Text("You did't add any Real Estates ! " )
                 
             }
+            .foregroundColor(.gray)
+
+            Spacer()
             
         }else{
                 
+            VStack {
                 ScrollView {
-                    ForEach($firebaseRealEstateManger.userRealEstates) { $realEstate in
-                        UserRealEstateView(realEstate: $realEstate )
-                        .padding(10)
+                        ForEach($firebaseRealEstateManger.userRealEstates) { $realEstate in
+                            UserRealEstateView(realEstate: $realEstate )
+                            .padding()
 
-                    
-                    }
+                        
+                        }
                 }
+                Rectangle()
+              .frame( height: 90)
+              .frame(maxWidth : .infinity)
+              .foregroundColor(.black)
+          
+                
+                
+            }
 
             }
+        }
+        
+        
         }
 
 }

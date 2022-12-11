@@ -47,17 +47,16 @@ struct MainView: View {
             case .newRealEstate:
                 AddRealEstateView( isAddNewEstateViewPresented: .constant(true))
             case .realEstatsMap:
-                HomeView()
+                RealEstatesMapView()
             case .userProfile:
-                ProfileView()
+                UserProfileView( selectedSection: $selectedSection)
             }
 
             VStack {
                 Spacer()
-                Text(firebaseUserManger.user.username)
                 RealEstatesTabView(selectedSection: $selectedSection)
                     .padding()
-                    .isHidden(firebaseUserManger.isUserLogin(), remove: firebaseUserManger.isUserLogin())
+                    .isHidden(!firebaseUserManger.isUserLogin(), remove: !firebaseUserManger.isUserLogin())
             }
 
         }

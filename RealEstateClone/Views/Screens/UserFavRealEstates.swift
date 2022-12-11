@@ -11,26 +11,50 @@ struct UserFavRealEstates: View {
     @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
 
     var body: some View {
-        if (firebaseRealEstateManger.bookMarkRealEstates.isEmpty){
-            ZStack{
-                Label("You did't add any favorite Real Estates ! " , systemImage: "bed.double.circle")
+        VStack {
+            HStack {
                 
-            }.foregroundColor(Color(.label))
+                Text("Favorite Real Estates")
+                    .font(.largeTitle).bold()
+                    .multilineTextAlignment(.leading)
+                    .padding(.leading)
+                    .padding(.top , 10)
+
+                Spacer()
+            }
             
-        }else{
+        if (firebaseRealEstateManger.bookMarkRealEstates.isEmpty){
+            Spacer()
+
+            VStack(spacing : 15){
+                Image(systemName : "house.fill")
+                    .imageScale(.large)
+                Text("You did't add any favorite Real Estates ! " )
                 
+            }
+            .foregroundColor(.gray)
+            Spacer()
+
+        }else{
+            VStack{
                 ScrollView {
                     ForEach($firebaseRealEstateManger.bookMarkRealEstates) { $realEstate in
                         UserRealEstateView(realEstate: $realEstate, isItFavView: true)
                       
-                        .padding(10)
+                        .padding()
 
                     
                     }
                 }
+            Rectangle()
+          .frame( height: 90)
+          .frame(maxWidth : .infinity)
+          .foregroundColor(.black)
+            }
 
             }
         
+        }
     }
 }
 

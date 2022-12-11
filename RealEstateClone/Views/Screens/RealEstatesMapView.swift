@@ -9,19 +9,16 @@ import SwiftUI
 import SDWebImageSwiftUI
 import MapKit
 import LoremSwiftum
-struct HomeView: View {
+struct RealEstatesMapView: View {
     @EnvironmentObject var firebaseUserManger : FirebaseUserManger
     @EnvironmentObject var firebaseRealEstateManger : FirebaseRealEstateManger
 
-    @State var isProfileViewPresented : Bool = false
     @State var isAuthViewPresented : Bool = false
-    @State var isAddNewEstateViewPresented : Bool = false
-    @State var  showRealEstateDetailView : Bool = false
     @State var  selectedRealEstate : RealEstate = .init()
 
     @State var region : MKCoordinateRegion = .init(center: City.arrass.coordinate, span: City.arrass.extraZoomLevel)
   
-    
+    @State var logInSlideAnimation : Bool = true
     @StateObject var locationManger : LocationManager = LocationManager()
     var body: some View {
     
@@ -75,9 +72,11 @@ struct HomeView: View {
 
                                 Text ("\(realEstate.price) SR")
                                     .foregroundColor(.white)
-                                Image(systemName : "house")
+                                Image("house-icon")
+                                    .resizable()
+                                    .frame(width: 20, height: 20 )
                                     .foregroundColor(.white)
-                                    .imageScale(.large)
+
                             
                             }.padding()
                                 .background(Color.blue.cornerRadius(30))
@@ -90,9 +89,6 @@ struct HomeView: View {
                     }
 
                     
-                    
-
-                       
 
                 }
             }
@@ -105,75 +101,52 @@ struct HomeView: View {
                 }
                 .overlay(
             HStack {
-                Spacer()
-               
-                Button {
-                    print("pressed")
-                    isAddNewEstateViewPresented = true
-                } label: {
-                    HStack {
-                        Image(systemName: "plus")
-                        Text("Add New Estat")
-                    } .isHidden(firebaseUserManger.isUserLogin(), remove: firebaseUserManger.isUserLogin())
+                VStack (spacing : 10){
+                    Image(systemName : "house.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    Text("You can add realEstats, favorite, and more capabilities by logging in to the platform")
+                        .font(.system(size : 15)).bold()
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    Button {
+                        
+                        isAuthViewPresented = true
+                    } label: {
+                        Text("Log in or Sign up here ")
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.black.opacity(0.2))
+                            .cornerRadius(12)
+                    }
 
-                }.padding(45).padding(.top , 30)
+                }
+                .padding(.top , 35)
+                .padding()
             }
-                .frame( height: 130)
-                .background(Material.ultraThinMaterial)
+                .frame(maxWidth : .infinity )
+                .background(Color.blue)
                 .cornerRadius(30, corners: [.bottomLeft, .bottomRight])
+                .shadow(color: .black.opacity(0.2), radius: 10, x: 10, y: 10)
                 .ignoresSafeArea(.all, edges: .top)
-
-            
-            
-                .fullScreenCover(isPresented: $isProfileViewPresented) {
-                ProfileView()
-            }
-            
-                .fullScreenCover(isPresented: $isAddNewEstateViewPresented) {
-                AddRealEstateView(isAddNewEstateViewPresented: $isAddNewEstateViewPresented)
-            }
-            
-                .fullScreenCover(isPresented: $isAuthViewPresented) {
-                AuthView()
-            }
+                .isHidden(firebaseUserManger.isUserLogin(), remove: firebaseUserManger.isUserLogin())
+                .offset(y :  logInSlideAnimation ? -200 : 0 )
+                .opacity( logInSlideAnimation ? 0.5 : 1)
+                .onAppear{
+                    withAnimation(.spring(response: 2 , dampingFraction: 1 , blendDuration: 1 )){
+                        logInSlideAnimation.toggle()
+                    }
+                }
+          
 
             ,alignment: .top
 
                     )
             
-                .overlay(
-                    Button{
-                    
-                    if (firebaseUserManger.user.id == ""){
-                        isAuthViewPresented = true
-                    }else{
-                    isProfileViewPresented = true
-                    }
-                }label: {
-                    
-                    if firebaseUserManger.user.profileImageUrl == "" {
-                        Image("user-icon")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 90, height: 90, alignment: .center)
-                            .clipShape(Circle())
-                            .padding(8)
-                            .overlay(Circle().stroke()
-                               .foregroundColor(.gray))
-                        }
-                        else {
-                    WebImage(url: URL(string: firebaseUserManger.user.profileImageUrl))
-                     .resizable()
-                     .scaledToFill()
-                     .frame(width: 90, height: 90, alignment: .center)
-                     .clipShape(Circle())
-                     .padding(8)
-                     .overlay(Circle().stroke()
-                        .foregroundColor(.gray))
-                              }
-                 
-                }.padding(.leading , 30) .padding(.top , 18), alignment:.topLeading)
-            
+                .fullScreenCover(isPresented: $isAuthViewPresented) {
+                AuthView()
+            }
             
                 .overlay(
                     
@@ -207,7 +180,7 @@ struct HomeView: View {
                         )
                         .padding()
                     
-                ,alignment: .bottomTrailing)
+                    ,alignment: .trailing)
             
                 .navigationBarHidden(true)
 
@@ -220,7 +193,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        RealEstatesMapView()
             .environmentObject(FirebaseUserManger())
             .environmentObject(FirebaseRealEstateManger())
 
